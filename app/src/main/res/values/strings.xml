@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TddLogin</string>
+    <string name="error_field_empty">The field can not be empty!</string>
+    <string name="login_text">Login</string>
+</resources>
