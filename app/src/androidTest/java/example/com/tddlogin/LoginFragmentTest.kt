@@ -6,23 +6,29 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.LargeTest
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 
 
-@RunWith(AndroidJUnit4::class)
-@LargeTest
+@HiltAndroidTest
 class LoginFragmentTest {
 
+    private val hiltRule = HiltAndroidRule(this)
+    private val activityTestRule = ActivityScenarioRule(MainActivity::class.java)
+
     @get:Rule
-    var activityRule: ActivityScenarioRule<MainActivity>
-            = ActivityScenarioRule(MainActivity::class.java)
+    val rule: RuleChain = RuleChain
+        .outerRule(hiltRule)
+        .around(activityTestRule)
 
 
     @Test
-    fun testLoginEnteredUserPassword_isEnable() {
+    fun testLoginEnteredUserPassword_LoginButtonisEnable() {
 
         onView(withId(R.id.etUserName))
             .perform(typeText("username"))
@@ -36,7 +42,7 @@ class LoginFragmentTest {
 
 
     @Test
-    fun testLoginEnteredUserPassword_isNotEnabled() {
+    fun testLoginEnteredUser_LoginButtonisNotEnabled() {
 
         onView(withId(R.id.etUserName))
             .perform(typeText("username"))
@@ -44,7 +50,5 @@ class LoginFragmentTest {
         onView(withId(R.id.btnLogin)).check(matches(isNotEnabled()));
 
     }
-
-
 
 }
