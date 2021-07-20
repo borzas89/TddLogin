@@ -33,7 +33,7 @@
         app:passwordToggleEnabled="true"
         app:hintTextAppearance="@style/TextAppearance.AppCompat.Large"
         android:scrollbarSize="12dp"
-     >
+        >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPassword"

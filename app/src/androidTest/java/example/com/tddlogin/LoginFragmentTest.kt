@@ -14,7 +14,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class MainActivityTest {
+class LoginFragmentTest {
 
     @get:Rule
     var activityRule: ActivityScenarioRule<MainActivity>
