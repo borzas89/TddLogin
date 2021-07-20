@@ -1,4 +1,4 @@
-package example.com.tddlogin
+package example.com.tddlogin.ui.login
 
 import android.os.Bundle
 import android.text.Editable
@@ -7,8 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import example.com.tddlogin.R
 import example.com.tddlogin.databinding.FragmentLoginBinding
+import example.com.tddlogin.navigator.AppNavigator
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -16,7 +20,10 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var loginRequest: LoginRequest
+    private val viewModel by viewModels<LoginViewModel>()
+
+    @Inject
+    lateinit var navigator: AppNavigator
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -26,8 +33,6 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        loginRequest = LoginRequest()
 
         binding.etUserName.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -66,10 +71,7 @@ class LoginFragment : Fragment() {
                 binding.etPassword.error = getString(R.string.error_field_empty)
             }
             if (!isUserEmpty && !isPasswordEmpty) {
-                loginRequest.send(
-                    binding.etUserName.text.toString(),
-                    binding.etPassword.text.toString()
-                )
+                navigator.navigateToHome()
             }
         }
 
