@@ -19,9 +19,12 @@ buildscript {
         espressoVersion = "3.4.0"
         mockitoVersion   = "2.27.0"
         mockkVersion = "1.10.6"
-        hiltVersion = '2.32-alpha'
+        hiltVersion = '2.37'
 
-        navigationVersion = '2.3.3'
+        fragmentVersion = '1.2.0'
+        navigationVersion = '2.3.5'
+        truthVersion = '1.1.3'
+        mockServerVersion = '4.9.1'
 
         junitVersion = '4.13.2'
         kotlinVersion = '1.4.30'
