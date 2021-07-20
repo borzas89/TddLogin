@@ -17,7 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "example.com.tddlogin.util.MainTestRunner"
     }
 
     buildTypes {
@@ -76,7 +76,13 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit-ktx:' + rootProject.extJUnitVersion
     androidTestImplementation 'androidx.test:runner:' + rootProject.runnerVersion
     androidTestImplementation 'androidx.test.espresso:espresso-core:' + rootProject.espressoVersion
-    testImplementation"junit:junit:$rootProject.junitVersion"
+
+    androidTestImplementation 'androidx.navigation:navigation-testing:' + rootProject.navigationVersion
+    androidTestImplementation 'androidx.fragment:fragment-testing:' + rootProject.fragmentVersion
+    androidTestImplementation 'com.google.truth:truth:' + rootProject.truthVersion
+
+    testImplementation "junit:junit:$rootProject.junitVersion"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$rootProject.hiltVersion"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$rootProject.androidXTestEspressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.androidXTestEspressoVersion"
     androidTestImplementation "androidx.test.ext:junit:$rootProject.androidXTestExtJunitVersion"
@@ -88,4 +94,6 @@ dependencies {
     testImplementation 'androidx.test.ext:truth:' + rootProject.extTruthVersion
     testImplementation 'org.mockito:mockito-core:' + rootProject.mockitoVersion
     testImplementation  'io.mockk:mockk:' + rootProject.mockkVersion
+    testImplementation 'com.squareup.okhttp3:mockwebserver:' + rootProject.mockServerVersion
+
 }
