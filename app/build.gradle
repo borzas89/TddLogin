@@ -18,6 +18,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "example.com.tddlogin.util.MainTestRunner"
+
     }
 
     buildTypes {
@@ -46,7 +47,6 @@ android {
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    // https://mvnrepository.com/artifact/com.google.android.material/material
     implementation group: 'com.google.android.material', name: 'material', version: '1.4.0'
 
     implementation 'androidx.core:core-ktx:1.6.0'
@@ -87,13 +87,19 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.androidXTestEspressoVersion"
     androidTestImplementation "androidx.test.ext:junit:$rootProject.androidXTestExtJunitVersion"
     androidTestImplementation "androidx.test:rules:$rootProject.androidXTestRulesVersion"
+    androidTestImplementation "androidx.arch.core:core-testing:$rootProject.androidXCoreTestingVersion"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$rootProject.hiltVersion"
     androidTestImplementation "org.mockito:mockito-core:3.+"
+    androidTestImplementation 'com.squareup.retrofit2:retrofit-mock:'+ rootProject.retrofitVersion
     testImplementation 'org.robolectric:robolectric:' + rootProject.robolectricVersion
     testImplementation 'androidx.test.espresso:espresso-intents:' + rootProject.espressoVersion
     testImplementation 'androidx.test.ext:truth:' + rootProject.extTruthVersion
     testImplementation 'org.mockito:mockito-core:' + rootProject.mockitoVersion
     testImplementation  'io.mockk:mockk:' + rootProject.mockkVersion
-    testImplementation 'com.squareup.okhttp3:mockwebserver:' + rootProject.mockServerVersion
+    androidTestImplementation'com.squareup.okhttp3:mockwebserver:' + rootProject.mockServerVersion
+    androidTestImplementation 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+
 
 }
