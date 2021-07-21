@@ -1,10 +1,13 @@
 package example.com.tddlogin.ui.home
 
 import androidx.lifecycle.*
+import com.auth0.android.jwt.JWT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import example.com.tddlogin.data.AuthenticationManager
+import example.com.tddlogin.data.User
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class HomeViewModel
@@ -12,9 +15,9 @@ class HomeViewModel
     private val authenticationManager: AuthenticationManager
 ) : ViewModel() {
 
-    private val _loginResponse = MutableLiveData<String>()
-    val loginResponse: LiveData<String>
-        get() = _loginResponse
+    private val _user = MutableLiveData<User>()
+    val user: LiveData<User>
+        get() = _user
 
 
     init {
@@ -22,15 +25,21 @@ class HomeViewModel
     }
 
     fun fetchToken(){
-        // TODO encode the token...
         viewModelScope.launch {
-            val login = authenticationManager.getAuthenticatedUserToken()
+            val token = authenticationManager.getAuthenticatedUserToken()
 
-            _loginResponse.value = login
+            _user.value = tokenToUserMapper(token)
 
         }
 
+    }
 
+    fun tokenToUserMapper(token: String): User{
+        val jwt = JWT(token)
+        return User (jwt.getClaim("idp:user_id").asString()!!,
+            jwt.getClaim("idp:user_name").asString()!!,
+            jwt.getClaim("idp:fullname").asString()!!,
+            jwt.getClaim("role").asString()!!  )
     }
 
 

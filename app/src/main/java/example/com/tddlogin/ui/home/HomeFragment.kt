@@ -26,10 +26,12 @@ class HomeFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.loginResponse.observe(viewLifecycleOwner, Observer {
-            binding.tvDatas.text = it
+        viewModel.user.observe(viewLifecycleOwner, Observer {
+            binding.tvUserFullName.text = it.userFullName
+            binding.tvRole.text = it.role
         })
 
     }
+
 
 }
