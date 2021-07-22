@@ -3,12 +3,9 @@ package example.com.tddlogin.ui.login
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import example.com.tddlogin.data.AuthenticationManager
-import example.com.tddlogin.data.User
 import example.com.tddlogin.network.AuthenticationService
-import example.com.tddlogin.network.LoginResponse
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class LoginViewModel
@@ -44,10 +41,20 @@ class LoginViewModel
 
              if(loginResponse.isSuccessful){
 
-                 _viewState.value = TokenLoaded(loginResponse.body()!!.accessToken)
+                 val tokenResponse = loginResponse.body()!!
+
+                 if(tokenResponse != null){
+
+                     _viewState.value = TokenLoaded(tokenResponse.accessToken)
+
+
+                 } else {
+                     _viewState.value = Error("Response body is empty")
+                 }
 
              } else {
-                 _viewState.value = Error("Bad response: HTTP ${loginResponse.code()}")
+                 _viewState.value =
+                     Error("Bad response: HTTP ${loginResponse.code()}")
              }
 
 
