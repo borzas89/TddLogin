@@ -12,7 +12,9 @@ import example.com.tddlogin.R
 import example.com.tddlogin.data.AuthenticationManager
 import example.com.tddlogin.databinding.FragmentLoginBinding
 import example.com.tddlogin.navigator.AppNavigator
+import example.com.tddlogin.util.hide
 import example.com.tddlogin.util.onTextChanged
+import example.com.tddlogin.util.show
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -60,7 +62,7 @@ class LoginFragment : Fragment() {
                 binding.etPassword.error = getString(R.string.error_field_empty)
             }
             if (!isUserEmpty && !isPasswordEmpty) {
-                binding.progressBar.visibility = View.VISIBLE
+                binding.progressBar.show()
                 with(viewModel) {
                     viewState.observe(viewLifecycleOwner, ::render)
                     gettingAuthToken()
@@ -73,16 +75,16 @@ class LoginFragment : Fragment() {
 
     private fun render(viewState: LoginViewState) {
         when (viewState) {
-            Loading -> binding.progressBar.visibility = View.VISIBLE
+            Loading -> binding.progressBar.show()
 
             is Error ->  {
-                binding.progressBar.visibility = View.GONE
-                binding.tvError.visibility = View.VISIBLE
+                binding.progressBar.hide()
+                binding.tvError.show()
                 binding.tvError.text =  viewState.message
             }
 
             is TokenLoaded -> {
-                binding.progressBar.visibility = View.GONE
+                binding.progressBar.hide()
                 viewModel.saveAccessToken(viewState.token)
                 navigator.navigateToHome()
             }
@@ -101,7 +103,7 @@ class LoginFragment : Fragment() {
 
     private val finishLoading: Runnable = Runnable {
         if (authenticationManager.isAuthenticated()) {
-            binding.progressBar.visibility = View.VISIBLE
+            binding.progressBar.show()
             navigator.navigateToHome()
         }
     }

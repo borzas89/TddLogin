@@ -2,6 +2,7 @@ package example.com.tddlogin.util
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.EditText
 
 inline fun EditText.onTextChanged(crossinline textChangeListener: (String) -> Unit) {
@@ -16,4 +17,12 @@ inline fun EditText.onTextChanged(crossinline textChangeListener: (String) -> Un
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         }
     })
+}
+
+fun View.show() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.hide() {
+    this.visibility = View.GONE
 }
