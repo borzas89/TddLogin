@@ -1,8 +1,7 @@
 package example.com.tddlogin.ui.login
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import example.com.tddlogin.R
+import example.com.tddlogin.data.AuthenticationManager
 import example.com.tddlogin.databinding.FragmentLoginBinding
 import example.com.tddlogin.navigator.AppNavigator
+import example.com.tddlogin.util.onTextChanged
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -23,8 +24,10 @@ class LoginFragment : Fragment() {
     private val viewModel by viewModels<LoginViewModel>()
 
     @Inject
-    lateinit var navigator: AppNavigator
+    lateinit var authenticationManager: AuthenticationManager
 
+    @Inject
+    lateinit var navigator: AppNavigator
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
@@ -34,29 +37,15 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.etUserName.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                enableLoginIfReady()
-            }
+        binding.etUserName.setText(viewModel.username.value)
+        binding.etPassword.setText(viewModel.password.value)
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
-
-        binding.etPassword.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                enableLoginIfReady()
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
+        binding.etUserName.onTextChanged { username -> viewModel.username.value = username
+                                            enableLoginIfReady()
+                                         }
+        binding.etPassword.onTextChanged { password -> viewModel.password.value = password
+                                           enableLoginIfReady()
+                                         }
 
 
         binding.btnLogin.setOnClickListener {
@@ -71,16 +60,64 @@ class LoginFragment : Fragment() {
                 binding.etPassword.error = getString(R.string.error_field_empty)
             }
             if (!isUserEmpty && !isPasswordEmpty) {
-                navigator.navigateToHome()
+                binding.progressBar.visibility = View.VISIBLE
+                with(viewModel) {
+                    viewState.observe(viewLifecycleOwner, ::render)
+                    gettingAuthToken()
+                }
             }
         }
 
-
     }
+
+
+    private fun render(viewState: LoginViewState) {
+        when (viewState) {
+            Loading -> binding.progressBar.visibility = View.VISIBLE
+
+            is Error ->  {
+                binding.progressBar.visibility = View.GONE
+                binding.tvError.visibility = View.VISIBLE
+                binding.tvError.text =  viewState.message
+            }
+
+            is TokenLoaded -> {
+                binding.progressBar.visibility = View.GONE
+                viewModel.saveAccessToken(viewState.token)
+                navigator.navigateToHome()
+            }
+        }
+    }
+
 
     fun enableLoginIfReady() {
         if(!binding.etUserName.text.isNullOrEmpty() && ! binding.etPassword.text.isNullOrEmpty()){
             binding.btnLogin.isEnabled = true
         }
+    }
+
+
+    private val handler = Handler()
+
+    private val finishLoading: Runnable = Runnable {
+        if (authenticationManager.isAuthenticated()) {
+            binding.progressBar.visibility = View.VISIBLE
+            navigator.navigateToHome()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        handler.postDelayed(finishLoading, 10L)
+    }
+
+    override fun onStop() {
+        handler.removeCallbacks(finishLoading)
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
