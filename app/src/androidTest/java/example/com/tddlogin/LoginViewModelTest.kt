@@ -14,10 +14,10 @@ import example.com.tddlogin.data.AuthenticationManager
 import example.com.tddlogin.network.AuthenticationService
 import example.com.tddlogin.network.LoginResponse
 import example.com.tddlogin.ui.login.Error
+import example.com.tddlogin.ui.login.TokenLoaded
 import example.com.tddlogin.util.getValue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import org.junit.Assert
@@ -71,6 +71,24 @@ class LoginViewModelTest {
 
     @Test
     @Throws(InterruptedException::class)
+    fun loadToken_success() = runBlocking {
+        viewModel.gettingAuthToken()
+        delay(500L)
+
+
+        Assert.assertEquals(
+            TokenLoaded("{\n" +
+                    "  \"access_token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZHA6dXNlcl9pZCI6IjUwY TdkYTFkLWZlMDctNGMxNC04YjFiLTAwNzczN2Y0Nzc2MyIsImlkcDp1c2VyX25h bWUiOiJqZG9lIiwiaWRwOmZ1bGxuYW1lIjoiSm9obiBEb2UiLCJyb2xlIjoiZWR pdG9yIiwiZXhwIjoxNTU2NDc2MjU1fQ.iqFmotBtfAYLplfpLVh_kPgvOIPyV7U Mm-NZA06XA5I\",\n" +
+                    "  \"token_type\":\"bearer\",\n" +
+                    "  \"expires_in\":119,\n" +
+                    "  \"refresh_token\":\"NTBhN2RhMWQtZmUwNy00YzE0LThiMWItMDA3NzM3ZjQ3NzYzIyNkNmQ5OTViZS 1jY2IxLTQ0MGUtODM4NS1lOTkwMTEwMzBhYzA=\"\n" +
+                    "}"),
+            getValue(viewModel.viewState)
+        )
+    }
+
+    @Test
+    @Throws(InterruptedException::class)
     fun gettingAuthToken_emptyBody_error() = runBlocking {
         val emptyBodyAuthService = object : AuthenticationService{
             override suspend fun login(
@@ -101,7 +119,7 @@ class LoginViewModelTest {
         delay(500L)
 
         Assert.assertEquals(
-            Error("Response body is empty"),
+            Error("Unexpected error."),
             viewModel.viewState.value
         )
     }
@@ -145,7 +163,7 @@ class LoginViewModelTest {
         delay(500L)
 
         Assert.assertEquals(
-            Error("Bad response: HTTP 401"),
+            Error("Invalid username or password."),
             getValue(viewModel.viewState)
         )
     }

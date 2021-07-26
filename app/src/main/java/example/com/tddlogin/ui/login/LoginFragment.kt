@@ -15,6 +15,7 @@ import example.com.tddlogin.navigator.AppNavigator
 import example.com.tddlogin.util.hide
 import example.com.tddlogin.util.onTextChanged
 import example.com.tddlogin.util.show
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -104,7 +105,13 @@ class LoginFragment : Fragment() {
     private val finishLoading: Runnable = Runnable {
         if (authenticationManager.isAuthenticated()) {
             binding.progressBar.show()
-            navigator.navigateToHome()
+
+            if(authenticationManager.getExpiryDate() > Date().time){
+                navigator.navigateToHome()
+            } else{
+                viewModel.refreshToken()
+            }
+
         }
     }
 

@@ -5,14 +5,11 @@ import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
-import org.junit.runner.RunWith
 
 
 @HiltAndroidTest
@@ -28,7 +25,7 @@ class LoginFragmentTest {
 
 
     @Test
-    fun testLoginEnteredUserPassword_LoginButtonisEnable() {
+    fun testLoginEnteredUserPassword_LoginButtonIsEnable() {
 
         onView(withId(R.id.etUserName))
             .perform(typeText("username"))
@@ -42,7 +39,7 @@ class LoginFragmentTest {
 
 
     @Test
-    fun testLoginEnteredUser_LoginButtonisNotEnabled() {
+    fun testLoginEnteredUser_LoginButtonIsNotEnabled() {
 
         onView(withId(R.id.etUserName))
             .perform(typeText("username"))
