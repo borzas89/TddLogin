@@ -4,6 +4,7 @@ data class User(
     var id: String,
     var userName: String,
     var userFullName: String,
-    var role: String
+    var role: String,
+    var exp: Long
 
 )

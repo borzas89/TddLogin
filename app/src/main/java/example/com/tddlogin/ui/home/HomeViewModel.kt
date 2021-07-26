@@ -21,10 +21,10 @@ class HomeViewModel
 
 
     init {
-        fetchToken()
+        gettingToken()
     }
 
-    fun fetchToken(){
+    fun gettingToken(){
         viewModelScope.launch {
             val token = authenticationManager.getAuthenticatedUserToken()
 
@@ -39,9 +39,8 @@ class HomeViewModel
         return User (jwt.getClaim("idp:user_id").asString()!!,
             jwt.getClaim("idp:user_name").asString()!!,
             jwt.getClaim("idp:fullname").asString()!!,
-            jwt.getClaim("role").asString()!!  )
+            jwt.getClaim("role").asString()!!,
+            jwt.getClaim("exp").asLong()!!)
     }
-
-
 
 }
