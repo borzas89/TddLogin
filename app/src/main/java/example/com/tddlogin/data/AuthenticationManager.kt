@@ -16,11 +16,27 @@ class AuthenticationManager @Inject constructor(val sharedPref: SharedPreference
         sharedPref.edit().putString("token", token).apply()
     }
 
+    fun saveRefreshToken(token: String) {
+        sharedPref.edit().putString("refresh_token", token).apply()
+    }
+
+    fun saveExpiryDate(expDate: Long) {
+        sharedPref.edit().putLong("expiry", expDate).apply()
+    }
+
+    fun getExpiryDate(): Long {
+        return sharedPref.getLong("expiry", 0L)
+    }
+
     fun clearRegistration() {
         sharedPref.edit().remove("token").apply()
     }
 
     fun getAuthenticatedUserToken(): String {
         return checkNotNull(sharedPref.getString("token", "").takeIf { it!!.isNotEmpty() })
+    }
+
+    fun getRefreshToken(): String {
+        return checkNotNull(sharedPref.getString("refresh_token", "").takeIf { it!!.isNotEmpty() })
     }
 }

@@ -15,6 +15,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.mockito.Mock
+import java.util.*
 
 
 @HiltAndroidTest
@@ -67,6 +68,15 @@ class AuthenticationManagerTest {
         authenticationManager.saveToken(token)
 
         assertThat(authenticationManager.getAuthenticatedUserToken() == token)
+    }
+
+    @Test
+    fun savingExpiryDateThenVerifyExpiryDateIsExists() {
+
+        val currentDate = Date().time +119
+        authenticationManager.saveExpiryDate(currentDate )
+
+        assertThat(authenticationManager.getExpiryDate() == currentDate)
     }
 
 
